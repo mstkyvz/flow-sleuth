@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live Traffic</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+:root{--bg:#fff;--fg:#1d1d1f;--mut:#666;--line:#e3e3e3;--sel:#f3f6ff;--mil:#d62728;--civ:#1f77b4;--ship:#0b8a5f;--train:#b8860b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1b1e;--fg:#ececf0;--mut:#a0a0a8;--line:#333;--sel:#262b3a}}
+:root[data-theme="dark"]{--bg:#1b1b1e;--fg:#ececf0;--mut:#a0a0a8;--line:#333;--sel:#262b3a}
+*{box-sizing:border-box}html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font:13px/1.4 system-ui,-apple-system,sans-serif}
+#wrap{display:flex;height:100%}#side{width:340px;max-width:42vw;display:flex;flex-direction:column;border-right:1px solid var(--line)}
+#m{flex:1}header{padding:12px 14px 6px}h1{font-size:16px;margin:0}.mut{color:var(--mut);font-size:12px}
+.tabs{display:flex;gap:6px;padding:6px 14px;flex-wrap:wrap}.tabs label{font-size:12px;border:1px solid var(--line);border-radius:14px;padding:2px 9px;cursor:pointer}
+.tabs input{margin:0 4px 0 0;vertical-align:-1px}#q{margin:4px 14px 8px;padding:6px 8px;border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--fg)}
+#list{overflow:auto;flex:1}.it{padding:7px 14px;border-top:1px solid var(--line);cursor:pointer}.it:hover{background:var(--sel)}
+.it b{font-weight:600}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+.ico{transition:transform .2s}.lbl{background:#fff;border:1px solid #0003;border-radius:4px;padding:0 4px;font:600 10.5px system-ui;color:#222;box-shadow:none}
+.lbl:before{display:none}
+@media (max-width:760px){#wrap{flex-direction:column-reverse}#side{width:auto;max-width:none;height:42%;border-right:0;border-top:1px solid var(--line)}#m{height:58%}}
+</style>
+</head>
+<body>
+<div id="wrap">
+<div id="side">
+<header><h1>Live traffic</h1><div class="mut" id="st">loading…</div></header>
+<div class="tabs">
+<label><input type="checkbox" class="ly" value="mil" checked><span class="dot" style="background:var(--mil)"></span>military aircraft</label>
+<label><input type="checkbox" class="ly" value="civil" checked><span class="dot" style="background:var(--civ)"></span>other aircraft</label>
+<label><input type="checkbox" class="ly" value="ship" checked><span class="dot" style="background:var(--ship)"></span>ships</label>
+<label><input type="checkbox" class="ly" value="train" checked><span class="dot" style="background:var(--train)"></span>trains</label>
+</div>
+<div class="tabs"><label><input type="checkbox" id="allr">from → to lines for all military aircraft</label></div>
+<input id="q" placeholder="search: registration, type, callsign, ship name…">
+<div id="list"></div>
+<div class="mut" style="padding:6px 14px">Aircraft: adsb.lol (ODbL) · ships and trains: Fintraffic Digitraffic (CC BY 4.0), Finland and the northern Baltic only · aircraft that asked not to be tracked are hidden</div>
+</div>
+<div id="m"></div>
+</div>
+<script>
+const m=L.map('m',{worldCopyJump:true}).setView([45,25],4);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:14,attribution:'© OpenStreetMap contributors'}).addTo(m);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const PLANE='<svg viewBox="0 0 24 24" width="20" height="20"><path fill="COL" stroke="#fff" stroke-width=".8" d="M12 2c.8 0 1.3.7 1.3 1.6V9l7.7 4.6v2l-7.7-2.3v4.6l2.2 1.7v1.6L12 20.3l-3.5.9v-1.6l2.2-1.7v-4.6L3 15.6v-2L10.7 9V3.6C10.7 2.7 11.2 2 12 2z"/></svg>';
+const SHIP='<svg viewBox="0 0 24 24" width="14" height="14"><path fill="COL" stroke="#fff" stroke-width="1" d="M12 2l5 16-5-3-5 3z"/></svg>';
+const TRAIN='<svg viewBox="0 0 24 24" width="14" height="14"><rect x="4" y="4" width="16" height="16" rx="4" fill="COL" stroke="#fff" stroke-width="1.5"/></svg>';
+const layers={mil:L.layerGroup().addTo(m),civil:L.layerGroup().addTo(m),ship:L.layerGroup().addTo(m),train:L.layerGroup().addTo(m)};
+let items=[],markers={},firstFit=true,mode=null,selKey=null;
+const sel=L.layerGroup().addTo(m), allR=L.layerGroup().addTo(m);
+function gc(a,b,n=48){const r=Math.PI/180,[la1,lo1,la2,lo2]=[a[0]*r,a[1]*r,b[0]*r,b[1]*r];
+  const d=2*Math.asin(Math.sqrt(Math.sin((la2-la1)/2)**2+Math.cos(la1)*Math.cos(la2)*Math.sin((lo2-lo1)/2)**2));if(!d)return [a,b];
+  const out=[];for(let i=0;i<=n;i++){const f=i/n,A=Math.sin((1-f)*d)/Math.sin(d),B=Math.sin(f*d)/Math.sin(d);
+    const x=A*Math.cos(la1)*Math.cos(lo1)+B*Math.cos(la2)*Math.cos(lo2),y=A*Math.cos(la1)*Math.sin(lo1)+B*Math.cos(la2)*Math.sin(lo2),z=A*Math.sin(la1)+B*Math.sin(la2);
+    out.push([Math.atan2(z,Math.hypot(x,y))/r,Math.atan2(y,x)/r]);}return out}
+function apMark(a,col,what){return L.circleMarker([a.lat,a.lon],{radius:6,color:col,weight:2,fillColor:'#fff',fillOpacity:1})
+  .bindTooltip(`${what}: ${esc(a.iata||a.code)} ${esc(a.name)} (${esc(a.cc)})`,{permanent:true,direction:'top',className:'lbl'})}
+function routeLines(x,g,col,full){
+  const r=x.route;if(!r)return;const here=[x.lat,x.lon];
+  L.polyline(gc([r.from.lat,r.from.lon],here),{color:col,weight:full?2:1.5,opacity:full?.55:.4,dashArray:'2 6'}).addTo(g);
+  L.polyline(gc(here,[r.to.lat,r.to.lon]),{color:col,weight:full?2.5:1.5,opacity:full?.9:.5,dashArray:'8 7'}).addTo(g);
+  if(full){apMark(r.from,col,'from').addTo(g);apMark(r.to,col,'to').addTo(g)}
+  else{L.circleMarker([r.to.lat,r.to.lon],{radius:3,color:col}).addTo(g)}}
+async function select(x){
+  sel.clearLayers();selKey='ac'+x.id;const col=x.layer==='mil'?css('--mil'):css('--civ');
+  routeLines(x,sel,col,true);
+  let tr=x.trail;
+  if(mode==='server'){try{tr=await (await fetch('api/trail?hex='+x.id)).json()}catch(e){}}
+  if(tr&&tr.length>1)L.polyline(tr,{color:col,weight:3,opacity:.9}).addTo(sel);
+}
+function drawAllRoutes(){allR.clearLayers();if(!document.getElementById('allr').checked)return;
+  for(const x of items)if(x.layer==='mil'&&x.route)routeLines(x,allR,css('--mil'),false)}
+m.on('popupclose',()=>{sel.clearLayers();selKey=null});
+const params=new URLSearchParams(location.search);
+function icon(svg,col,rot){return L.divIcon({className:'',iconSize:[20,20],iconAnchor:[10,10],
+  html:`<div class="ico" style="transform:rotate(${rot||0}deg)">${svg.replace('COL',col)}</div>`})}
+function popup(x){
+  if(x.k==='ac')return `<b>${esc(x.reg||x.id.toUpperCase())}</b> ${esc(x.type||'')} <span class="mut">${esc(x.desc||'')}</span><br>`+
+    (x.route?`<b>${esc(x.route.from.iata||x.route.from.code)}</b> ${esc(x.route.from.name)} → <b>${esc(x.route.to.iata||x.route.to.code)}</b> ${esc(x.route.to.name)}<br><span class="mut">route from the callsign's timetable</span><br>`:'<span class="mut">origin/destination not in timetable data</span><br>')+
+    `callsign <b>${esc(x.cs||'-')}</b> · ${esc(x.op||'operator unknown')}<br>`+
+    `${x.alt==='ground'?'on the ground':(x.alt!=null?x.alt+' ft':'')} ${x.gs!=null?'· '+Math.round(x.gs)+' kt':''} · ${x.cls==='mil'?'military':'other'}`+
+    `${x.sq?' · squawk '+esc(x.sq):''}<br><span class="mut">ICAO ${esc(x.id)}</span>`;
+  if(x.k==='ship')return `<b>${esc(x.name||'MMSI '+x.id)}</b> <span class="mut">${esc(x.kind)}</span><br>`+
+    `${x.dest?'to <b>'+esc(x.dest)+'</b> · ':''}${x.sog!=null?x.sog.toFixed(1)+' kn':''}<br><span class="mut">MMSI ${x.id}${x.imo?' · IMO '+x.imo:''}</span>`;
+  return `<b>${esc(x.type)} ${x.id}</b> ${x.line?'line '+esc(x.line):''} <span class="mut">${esc(x.cat)}</span><br>`+
+    `${esc(x.from)} → ${esc(x.to)} · ${x.speed??'?'} km/h · ${esc(x.op)}`;
+}
+const qs=params.get('at')?'?at='+encodeURIComponent(params.get('at')):'';
+async function load(){
+  let ac,sh,tr,t;
+  try{
+    if(mode!=='static'){
+      try{const r=await fetch('api/aircraft'+qs);if(!r.ok)throw new Error(r.status);const a=await r.json();mode='server';ac=a.aircraft;t=a.t;
+        [sh,tr]=await Promise.all([fetch('api/ships').then(r=>r.json()).then(d=>d.ships).catch(()=>[]),
+                                   fetch('api/trains').then(r=>r.json()).then(d=>d.trains).catch(()=>[])]);}
+      catch(e){if(mode==='server')throw e;mode='static'}}
+    if(mode==='static'){const s=await (await fetch('live.json?t='+Date.now())).json();ac=s.aircraft;sh=s.ships;tr=s.trains;t=s.t}
+  }catch(e){document.getElementById('st').textContent='could not load data: '+e;return}
+  items=[...ac.map(x=>({...x,k:'ac',layer:x.cls==='mil'?'mil':'civil'})),...sh.map(x=>({...x,k:'ship',layer:'ship'})),...tr.map(x=>({...x,k:'train',layer:'train'}))];
+  const seen=new Set();
+  for(const x of items){
+    const key=x.k+x.id;seen.add(key);
+    const col=x.layer==='mil'?css('--mil'):x.layer==='civil'?css('--civ'):x.layer==='ship'?css('--ship'):css('--train');
+    const ic=x.k==='ac'?icon(PLANE,col,x.trk):x.k==='ship'?icon(SHIP,col,x.trk):icon(TRAIN,col,0);
+    let mk=markers[key];
+    if(!mk){mk=L.marker([x.lat,x.lon],{icon:ic}).bindPopup('');markers[key]=mk;
+      if(x.layer==='mil')mk.bindTooltip(`${esc(x.reg||'')} ${esc(x.type||'')}`,{permanent:true,direction:'right',offset:[10,0],className:'lbl'});}
+    else{mk.setLatLng([x.lat,x.lon]);mk.setIcon(ic);}
+    mk.setPopupContent(popup(x));mk._x=x;
+    if(!mk._h&&x.k==='ac'){mk.on('click',()=>select(mk._x));mk._h=1}
+    if(mk._g!==x.layer){if(mk._g)layers[mk._g].removeLayer(mk);layers[x.layer].addLayer(mk);mk._g=x.layer;}
+  }
+  for(const k in markers)if(!seen.has(k)){layers[markers[k]._g].removeLayer(markers[k]);delete markers[k]}
+  const n=l=>items.filter(x=>x.layer===l).length;
+  document.getElementById('st').textContent=`${new Date(t*1000).toUTCString().slice(17,25)} UTC · ${n('mil')} military, ${n('civil')} other aircraft, ${n('ship')} ships, ${n('train')} trains`+(mode==='static'?' · snapshot':'');
+  if(firstFit&&params.get('at')){const [la,lo]=params.get('at').split(',').map(Number);m.setView([la,lo],7)}
+  firstFit=false;list();drawAllRoutes();
+  if(selKey&&markers[selKey])select(markers[selKey]._x);
+}
+function list(){
+  const q=document.getElementById('q').value.toLowerCase();
+  const on=new Set([...document.querySelectorAll('.ly')].filter(c=>c.checked).map(c=>c.value));
+  for(const g in layers){if(on.has(g))layers[g].addTo(m);else layers[g].remove()}
+  const rows=items.filter(x=>on.has(x.layer)&&(!q||JSON.stringify(x).toLowerCase().includes(q)))
+    .map(x=>({x,v:m.getBounds().contains([x.lat,x.lon])?0:1})).sort((a,b)=>a.v-b.v||(a.x.layer==='mil'?0:1)-(b.x.layer==='mil'?0:1))
+    .map(o=>o.x).slice(0,300);
+  document.getElementById('list').innerHTML=rows.map(x=>{
+    const t=x.k==='ac'?`<b>${esc(x.reg||x.id)}</b> ${esc(x.type||'')} · ${esc(x.cs||'')}${x.route?' · '+esc(x.route.from.iata||x.route.from.code)+' → '+esc(x.route.to.iata||x.route.to.code):''}<div class="mut">${esc(x.desc||'')}${x.op?' · '+esc(x.op):''}</div>`:
+      x.k==='ship'?`<b>${esc(x.name||x.id)}</b> · ${esc(x.kind)}<div class="mut">${x.dest?'to '+esc(x.dest):''}</div>`:
+      `<b>${esc(x.type)} ${x.id}</b> · ${esc(x.cat)}<div class="mut">${esc(x.from)} → ${esc(x.to)}</div>`;
+    return `<div class="it" data-k="${x.k+x.id}">${t}</div>`}).join('');
+  document.querySelectorAll('.it').forEach(e=>e.onclick=()=>{const mk=markers[e.dataset.k];if(mk){m.setView(mk.getLatLng(),Math.max(m.getZoom(),6));mk.openPopup();if(mk._x.k==='ac')select(mk._x)}});
+}
+document.querySelectorAll('.ly').forEach(c=>c.onchange=list);m.on('moveend',list);document.getElementById('q').oninput=list;document.getElementById('allr').onchange=drawAllRoutes;
+load();setInterval(load,15000);
+</script>
+</body>
+</html>

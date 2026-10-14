@@ -1,0 +1,1242 @@
+{
+"_meta": {
+"what": "ICAO 24-bit aircraft address blocks allocated to states (ICAO Annex 10 Vol III, Part I, Chapter 9, Appendix). An aircraft's address block gives its state of registry, not its operator or its passengers.",
+"source": [
+"ICAO Annex 10 Volume III, Chapter 9 Appendix (allocation table)",
+"cross-checked with the table in https://github.com/wiedehopf/tar1090 html/flags.js"
+],
+"fetched": "2026-10-14"
+},
+"blocks": [
+{
+"start": "004000",
+"end": "0047ff",
+"country": "Zimbabwe",
+"cc": "ZW"
+},
+{
+"start": "006000",
+"end": "006fff",
+"country": "Mozambique",
+"cc": "MZ"
+},
+{
+"start": "008000",
+"end": "00ffff",
+"country": "South Africa",
+"cc": "ZA"
+},
+{
+"start": "010000",
+"end": "017fff",
+"country": "Egypt",
+"cc": "EG"
+},
+{
+"start": "018000",
+"end": "01ffff",
+"country": "Libya",
+"cc": "LY"
+},
+{
+"start": "020000",
+"end": "027fff",
+"country": "Morocco",
+"cc": "MA"
+},
+{
+"start": "028000",
+"end": "02ffff",
+"country": "Tunisia",
+"cc": "TN"
+},
+{
+"start": "030000",
+"end": "0307ff",
+"country": "Botswana",
+"cc": "BW"
+},
+{
+"start": "032000",
+"end": "032fff",
+"country": "Burundi",
+"cc": "BI"
+},
+{
+"start": "034000",
+"end": "034fff",
+"country": "Cameroon",
+"cc": "CM"
+},
+{
+"start": "035000",
+"end": "0357ff",
+"country": "Comoros",
+"cc": "KM"
+},
+{
+"start": "036000",
+"end": "036fff",
+"country": "Republic of the Congo",
+"cc": "CG"
+},
+{
+"start": "038000",
+"end": "038fff",
+"country": "C\u00f4te d\u2019Ivoire",
+"cc": "CI"
+},
+{
+"start": "03e000",
+"end": "03efff",
+"country": "Gabon",
+"cc": "GA"
+},
+{
+"start": "040000",
+"end": "040fff",
+"country": "Ethiopia",
+"cc": "ET"
+},
+{
+"start": "042000",
+"end": "042fff",
+"country": "Equatorial Guinea",
+"cc": "GQ"
+},
+{
+"start": "044000",
+"end": "044fff",
+"country": "Ghana",
+"cc": "GH"
+},
+{
+"start": "046000",
+"end": "046fff",
+"country": "Guinea",
+"cc": "GN"
+},
+{
+"start": "048000",
+"end": "0487ff",
+"country": "Guinea-Bissau",
+"cc": "GW"
+},
+{
+"start": "04a000",
+"end": "04a7ff",
+"country": "Lesotho",
+"cc": "LS"
+},
+{
+"start": "04c000",
+"end": "04cfff",
+"country": "Kenya",
+"cc": "KE"
+},
+{
+"start": "050000",
+"end": "050fff",
+"country": "Liberia",
+"cc": "LR"
+},
+{
+"start": "054000",
+"end": "054fff",
+"country": "Madagascar",
+"cc": "MG"
+},
+{
+"start": "058000",
+"end": "058fff",
+"country": "Malawi",
+"cc": "MW"
+},
+{
+"start": "05a000",
+"end": "05a7ff",
+"country": "Maldives",
+"cc": "MV"
+},
+{
+"start": "05c000",
+"end": "05cfff",
+"country": "Mali",
+"cc": "ML"
+},
+{
+"start": "05e000",
+"end": "05e7ff",
+"country": "Mauritania",
+"cc": "MR"
+},
+{
+"start": "060000",
+"end": "0607ff",
+"country": "Mauritius",
+"cc": "MU"
+},
+{
+"start": "062000",
+"end": "062fff",
+"country": "Niger",
+"cc": "NE"
+},
+{
+"start": "064000",
+"end": "064fff",
+"country": "Nigeria",
+"cc": "NG"
+},
+{
+"start": "068000",
+"end": "068fff",
+"country": "Uganda",
+"cc": "UG"
+},
+{
+"start": "06a000",
+"end": "06afff",
+"country": "Qatar",
+"cc": "QA"
+},
+{
+"start": "06c000",
+"end": "06cfff",
+"country": "Central African Republic",
+"cc": "CF"
+},
+{
+"start": "06e000",
+"end": "06efff",
+"country": "Rwanda",
+"cc": "RW"
+},
+{
+"start": "070000",
+"end": "070fff",
+"country": "Senegal",
+"cc": "SN"
+},
+{
+"start": "074000",
+"end": "0747ff",
+"country": "Seychelles",
+"cc": "SC"
+},
+{
+"start": "076000",
+"end": "0767ff",
+"country": "Sierra Leone",
+"cc": "SL"
+},
+{
+"start": "078000",
+"end": "078fff",
+"country": "Somalia",
+"cc": "SO"
+},
+{
+"start": "07a000",
+"end": "07a7ff",
+"country": "Eswatini",
+"cc": "SZ"
+},
+{
+"start": "07c000",
+"end": "07cfff",
+"country": "Sudan",
+"cc": "SD"
+},
+{
+"start": "080000",
+"end": "080fff",
+"country": "Tanzania",
+"cc": "TZ"
+},
+{
+"start": "084000",
+"end": "084fff",
+"country": "Chad",
+"cc": "TD"
+},
+{
+"start": "088000",
+"end": "088fff",
+"country": "Togo",
+"cc": "TG"
+},
+{
+"start": "08a000",
+"end": "08afff",
+"country": "Zambia",
+"cc": "ZM"
+},
+{
+"start": "08c000",
+"end": "08cfff",
+"country": "DR Congo",
+"cc": "CD"
+},
+{
+"start": "090000",
+"end": "090fff",
+"country": "Angola",
+"cc": "AO"
+},
+{
+"start": "094000",
+"end": "0947ff",
+"country": "Benin",
+"cc": "BJ"
+},
+{
+"start": "096000",
+"end": "0967ff",
+"country": "Cabo Verde",
+"cc": "CV"
+},
+{
+"start": "098000",
+"end": "0987ff",
+"country": "Djibouti",
+"cc": "DJ"
+},
+{
+"start": "09a000",
+"end": "09afff",
+"country": "Gambia",
+"cc": "GM"
+},
+{
+"start": "09c000",
+"end": "09cfff",
+"country": "Burkina Faso",
+"cc": "BF"
+},
+{
+"start": "09e000",
+"end": "09e7ff",
+"country": "S\u00e3o Tom\u00e9 and Pr\u00edncipe",
+"cc": "ST"
+},
+{
+"start": "0a0000",
+"end": "0a7fff",
+"country": "Algeria",
+"cc": "DZ"
+},
+{
+"start": "0a8000",
+"end": "0a8fff",
+"country": "Bahamas",
+"cc": "BS"
+},
+{
+"start": "0aa000",
+"end": "0aa7ff",
+"country": "Barbados",
+"cc": "BB"
+},
+{
+"start": "0ab000",
+"end": "0ab7ff",
+"country": "Belize",
+"cc": "BZ"
+},
+{
+"start": "0ac000",
+"end": "0adfff",
+"country": "Colombia",
+"cc": "CO"
+},
+{
+"start": "0ae000",
+"end": "0aefff",
+"country": "Costa Rica",
+"cc": "CR"
+},
+{
+"start": "0b0000",
+"end": "0b0fff",
+"country": "Cuba",
+"cc": "CU"
+},
+{
+"start": "0b2000",
+"end": "0b2fff",
+"country": "El Salvador",
+"cc": "SV"
+},
+{
+"start": "0b4000",
+"end": "0b4fff",
+"country": "Guatemala",
+"cc": "GT"
+},
+{
+"start": "0b6000",
+"end": "0b6fff",
+"country": "Guyana",
+"cc": "GY"
+},
+{
+"start": "0b8000",
+"end": "0b8fff",
+"country": "Haiti",
+"cc": "HT"
+},
+{
+"start": "0ba000",
+"end": "0bafff",
+"country": "Honduras",
+"cc": "HN"
+},
+{
+"start": "0bc000",
+"end": "0bc7ff",
+"country": "Saint Vincent and the Grenadines",
+"cc": "VC"
+},
+{
+"start": "0be000",
+"end": "0befff",
+"country": "Jamaica",
+"cc": "JM"
+},
+{
+"start": "0c0000",
+"end": "0c0fff",
+"country": "Nicaragua",
+"cc": "NI"
+},
+{
+"start": "0c2000",
+"end": "0c2fff",
+"country": "Panama",
+"cc": "PA"
+},
+{
+"start": "0c4000",
+"end": "0c4fff",
+"country": "Dominican Republic",
+"cc": "DO"
+},
+{
+"start": "0c6000",
+"end": "0c6fff",
+"country": "Trinidad and Tobago",
+"cc": "TT"
+},
+{
+"start": "0c8000",
+"end": "0c8fff",
+"country": "Suriname",
+"cc": "SR"
+},
+{
+"start": "0ca000",
+"end": "0ca7ff",
+"country": "Antigua and Barbuda",
+"cc": "AG"
+},
+{
+"start": "0cc000",
+"end": "0cc7ff",
+"country": "Grenada",
+"cc": "GD"
+},
+{
+"start": "0d0000",
+"end": "0d7fff",
+"country": "Mexico",
+"cc": "MX"
+},
+{
+"start": "0d8000",
+"end": "0dffff",
+"country": "Venezuela",
+"cc": "VE"
+},
+{
+"start": "100000",
+"end": "1fffff",
+"country": "Russia",
+"cc": "RU"
+},
+{
+"start": "201000",
+"end": "2017ff",
+"country": "Namibia",
+"cc": "NA"
+},
+{
+"start": "202000",
+"end": "2027ff",
+"country": "Eritrea",
+"cc": "ER"
+},
+{
+"start": "300000",
+"end": "33ffff",
+"country": "Italy",
+"cc": "IT"
+},
+{
+"start": "340000",
+"end": "37ffff",
+"country": "Spain",
+"cc": "ES"
+},
+{
+"start": "380000",
+"end": "3bffff",
+"country": "France",
+"cc": "FR"
+},
+{
+"start": "3c0000",
+"end": "3fffff",
+"country": "Germany",
+"cc": "DE"
+},
+{
+"start": "400000",
+"end": "4001bf",
+"country": "Bermuda",
+"cc": "BM"
+},
+{
+"start": "4001c0",
+"end": "4001ff",
+"country": "Cayman Islands",
+"cc": "KY"
+},
+{
+"start": "400300",
+"end": "4003ff",
+"country": "Turks and Caicos Islands",
+"cc": "TC"
+},
+{
+"start": "424135",
+"end": "4241f2",
+"country": "Cayman Islands",
+"cc": "KY"
+},
+{
+"start": "424200",
+"end": "4246ff",
+"country": "Bermuda",
+"cc": "BM"
+},
+{
+"start": "424700",
+"end": "424899",
+"country": "Cayman Islands",
+"cc": "KY"
+},
+{
+"start": "424b00",
+"end": "424bff",
+"country": "Isle of Man",
+"cc": "IM"
+},
+{
+"start": "43be00",
+"end": "43beff",
+"country": "Bermuda",
+"cc": "BM"
+},
+{
+"start": "43e700",
+"end": "43eafd",
+"country": "Isle of Man",
+"cc": "IM"
+},
+{
+"start": "43eafe",
+"end": "43eeff",
+"country": "Guernsey",
+"cc": "GG"
+},
+{
+"start": "400000",
+"end": "43ffff",
+"country": "United Kingdom",
+"cc": "GB"
+},
+{
+"start": "440000",
+"end": "447fff",
+"country": "Austria",
+"cc": "AT"
+},
+{
+"start": "448000",
+"end": "44ffff",
+"country": "Belgium",
+"cc": "BE"
+},
+{
+"start": "450000",
+"end": "457fff",
+"country": "Bulgaria",
+"cc": "BG"
+},
+{
+"start": "458000",
+"end": "45ffff",
+"country": "Denmark",
+"cc": "DK"
+},
+{
+"start": "460000",
+"end": "467fff",
+"country": "Finland",
+"cc": "FI"
+},
+{
+"start": "468000",
+"end": "46ffff",
+"country": "Greece",
+"cc": "GR"
+},
+{
+"start": "470000",
+"end": "477fff",
+"country": "Hungary",
+"cc": "HU"
+},
+{
+"start": "478000",
+"end": "47ffff",
+"country": "Norway",
+"cc": "NO"
+},
+{
+"start": "480000",
+"end": "487fff",
+"country": "Netherlands",
+"cc": "NL"
+},
+{
+"start": "488000",
+"end": "48ffff",
+"country": "Poland",
+"cc": "PL"
+},
+{
+"start": "490000",
+"end": "497fff",
+"country": "Portugal",
+"cc": "PT"
+},
+{
+"start": "498000",
+"end": "49ffff",
+"country": "Czechia",
+"cc": "CZ"
+},
+{
+"start": "4a0000",
+"end": "4a7fff",
+"country": "Romania",
+"cc": "RO"
+},
+{
+"start": "4a8000",
+"end": "4affff",
+"country": "Sweden",
+"cc": "SE"
+},
+{
+"start": "4b0000",
+"end": "4b7fff",
+"country": "Switzerland",
+"cc": "CH"
+},
+{
+"start": "4b8000",
+"end": "4bffff",
+"country": "Turkey",
+"cc": "TR"
+},
+{
+"start": "4c0000",
+"end": "4c7fff",
+"country": "Serbia",
+"cc": "RS"
+},
+{
+"start": "4c8000",
+"end": "4c87ff",
+"country": "Cyprus",
+"cc": "CY"
+},
+{
+"start": "4ca000",
+"end": "4cafff",
+"country": "Ireland",
+"cc": "IE"
+},
+{
+"start": "4cc000",
+"end": "4ccfff",
+"country": "Iceland",
+"cc": "IS"
+},
+{
+"start": "4d0000",
+"end": "4d07ff",
+"country": "Luxembourg",
+"cc": "LU"
+},
+{
+"start": "4d2000",
+"end": "4d27ff",
+"country": "Malta",
+"cc": "MT"
+},
+{
+"start": "4d4000",
+"end": "4d47ff",
+"country": "Monaco",
+"cc": "MC"
+},
+{
+"start": "500000",
+"end": "5007ff",
+"country": "San Marino",
+"cc": "SM"
+},
+{
+"start": "501000",
+"end": "5017ff",
+"country": "Albania",
+"cc": "AL"
+},
+{
+"start": "501800",
+"end": "501fff",
+"country": "Croatia",
+"cc": "HR"
+},
+{
+"start": "502800",
+"end": "502fff",
+"country": "Latvia",
+"cc": "LV"
+},
+{
+"start": "503800",
+"end": "503fff",
+"country": "Lithuania",
+"cc": "LT"
+},
+{
+"start": "504800",
+"end": "504fff",
+"country": "Moldova",
+"cc": "MD"
+},
+{
+"start": "505800",
+"end": "505fff",
+"country": "Slovakia",
+"cc": "SK"
+},
+{
+"start": "506800",
+"end": "506fff",
+"country": "Slovenia",
+"cc": "SI"
+},
+{
+"start": "507800",
+"end": "507fff",
+"country": "Uzbekistan",
+"cc": "UZ"
+},
+{
+"start": "508000",
+"end": "50ffff",
+"country": "Ukraine",
+"cc": "UA"
+},
+{
+"start": "510000",
+"end": "5107ff",
+"country": "Belarus",
+"cc": "BY"
+},
+{
+"start": "511000",
+"end": "5117ff",
+"country": "Estonia",
+"cc": "EE"
+},
+{
+"start": "512000",
+"end": "5127ff",
+"country": "North Macedonia",
+"cc": "MK"
+},
+{
+"start": "513000",
+"end": "5137ff",
+"country": "Bosnia and Herzegovina",
+"cc": "BA"
+},
+{
+"start": "514000",
+"end": "5147ff",
+"country": "Georgia",
+"cc": "GE"
+},
+{
+"start": "515000",
+"end": "5157ff",
+"country": "Tajikistan",
+"cc": "TJ"
+},
+{
+"start": "516000",
+"end": "5167ff",
+"country": "Montenegro",
+"cc": "ME"
+},
+{
+"start": "600000",
+"end": "6007ff",
+"country": "Armenia",
+"cc": "AM"
+},
+{
+"start": "600800",
+"end": "600fff",
+"country": "Azerbaijan",
+"cc": "AZ"
+},
+{
+"start": "601000",
+"end": "6017ff",
+"country": "Kyrgyzstan",
+"cc": "KG"
+},
+{
+"start": "601800",
+"end": "601fff",
+"country": "Turkmenistan",
+"cc": "TM"
+},
+{
+"start": "680000",
+"end": "6807ff",
+"country": "Bhutan",
+"cc": "BT"
+},
+{
+"start": "681000",
+"end": "6817ff",
+"country": "Micronesia, Federated States of",
+"cc": "FM"
+},
+{
+"start": "682000",
+"end": "6827ff",
+"country": "Mongolia",
+"cc": "MN"
+},
+{
+"start": "683000",
+"end": "6837ff",
+"country": "Kazakhstan",
+"cc": "KZ"
+},
+{
+"start": "684000",
+"end": "6847ff",
+"country": "Palau",
+"cc": "PW"
+},
+{
+"start": "700000",
+"end": "700fff",
+"country": "Afghanistan",
+"cc": "AF"
+},
+{
+"start": "702000",
+"end": "702fff",
+"country": "Bangladesh",
+"cc": "BD"
+},
+{
+"start": "704000",
+"end": "704fff",
+"country": "Myanmar",
+"cc": "MM"
+},
+{
+"start": "706000",
+"end": "706fff",
+"country": "Kuwait",
+"cc": "KW"
+},
+{
+"start": "708000",
+"end": "708fff",
+"country": "Laos",
+"cc": "LA"
+},
+{
+"start": "70a000",
+"end": "70afff",
+"country": "Nepal",
+"cc": "NP"
+},
+{
+"start": "70c000",
+"end": "70c7ff",
+"country": "Oman",
+"cc": "OM"
+},
+{
+"start": "70e000",
+"end": "70efff",
+"country": "Cambodia",
+"cc": "KH"
+},
+{
+"start": "710000",
+"end": "717fff",
+"country": "Saudi Arabia",
+"cc": "SA"
+},
+{
+"start": "718000",
+"end": "71ffff",
+"country": "South Korea",
+"cc": "KR"
+},
+{
+"start": "720000",
+"end": "727fff",
+"country": "North Korea",
+"cc": "KP"
+},
+{
+"start": "728000",
+"end": "72ffff",
+"country": "Iraq",
+"cc": "IQ"
+},
+{
+"start": "730000",
+"end": "737fff",
+"country": "Iran",
+"cc": "IR"
+},
+{
+"start": "738000",
+"end": "73ffff",
+"country": "Israel",
+"cc": "IL"
+},
+{
+"start": "740000",
+"end": "747fff",
+"country": "Jordan",
+"cc": "JO"
+},
+{
+"start": "748000",
+"end": "74ffff",
+"country": "Lebanon",
+"cc": "LB"
+},
+{
+"start": "750000",
+"end": "757fff",
+"country": "Malaysia",
+"cc": "MY"
+},
+{
+"start": "758000",
+"end": "75ffff",
+"country": "Philippines",
+"cc": "PH"
+},
+{
+"start": "760000",
+"end": "767fff",
+"country": "Pakistan",
+"cc": "PK"
+},
+{
+"start": "768000",
+"end": "76ffff",
+"country": "Singapore",
+"cc": "SG"
+},
+{
+"start": "770000",
+"end": "777fff",
+"country": "Sri Lanka",
+"cc": "LK"
+},
+{
+"start": "778000",
+"end": "77ffff",
+"country": "Syria",
+"cc": "SY"
+},
+{
+"start": "789000",
+"end": "789fff",
+"country": "Hong Kong",
+"cc": "HK"
+},
+{
+"start": "780000",
+"end": "7bffff",
+"country": "China",
+"cc": "CN"
+},
+{
+"start": "7c0000",
+"end": "7fffff",
+"country": "Australia",
+"cc": "AU"
+},
+{
+"start": "800000",
+"end": "83ffff",
+"country": "India",
+"cc": "IN"
+},
+{
+"start": "840000",
+"end": "87ffff",
+"country": "Japan",
+"cc": "JP"
+},
+{
+"start": "880000",
+"end": "887fff",
+"country": "Thailand",
+"cc": "TH"
+},
+{
+"start": "888000",
+"end": "88ffff",
+"country": "Viet Nam",
+"cc": "VN"
+},
+{
+"start": "890000",
+"end": "890fff",
+"country": "Yemen",
+"cc": "YE"
+},
+{
+"start": "894000",
+"end": "894fff",
+"country": "Bahrain",
+"cc": "BH"
+},
+{
+"start": "895000",
+"end": "8957ff",
+"country": "Brunei",
+"cc": "BN"
+},
+{
+"start": "896000",
+"end": "896fff",
+"country": "United Arab Emirates",
+"cc": "AE"
+},
+{
+"start": "897000",
+"end": "8977ff",
+"country": "Solomon Islands",
+"cc": "SB"
+},
+{
+"start": "898000",
+"end": "898fff",
+"country": "Papua New Guinea",
+"cc": "PG"
+},
+{
+"start": "899000",
+"end": "8997ff",
+"country": "Taiwan",
+"cc": "TW"
+},
+{
+"start": "8a0000",
+"end": "8a7fff",
+"country": "Indonesia",
+"cc": "ID"
+},
+{
+"start": "900000",
+"end": "9007ff",
+"country": "Marshall Islands",
+"cc": "MH"
+},
+{
+"start": "901000",
+"end": "9017ff",
+"country": "Cook Islands",
+"cc": "SK"
+},
+{
+"start": "902000",
+"end": "9027ff",
+"country": "Samoa",
+"cc": "WS"
+},
+{
+"start": "a00000",
+"end": "afffff",
+"country": "United States",
+"cc": "US"
+},
+{
+"start": "c00000",
+"end": "c3ffff",
+"country": "Canada",
+"cc": "CA"
+},
+{
+"start": "c80000",
+"end": "c87fff",
+"country": "New Zealand",
+"cc": "NZ"
+},
+{
+"start": "c88000",
+"end": "c88fff",
+"country": "Fiji",
+"cc": "FJ"
+},
+{
+"start": "c8a000",
+"end": "c8a7ff",
+"country": "Nauru",
+"cc": "NR"
+},
+{
+"start": "c8c000",
+"end": "c8c7ff",
+"country": "Saint Lucia",
+"cc": "LC"
+},
+{
+"start": "c8d000",
+"end": "c8d7ff",
+"country": "Tonga",
+"cc": "TO"
+},
+{
+"start": "c8e000",
+"end": "c8e7ff",
+"country": "Kiribati",
+"cc": "KI"
+},
+{
+"start": "c90000",
+"end": "c907ff",
+"country": "Vanuatu",
+"cc": "VU"
+},
+{
+"start": "c91000",
+"end": "c917ff",
+"country": "Andorra",
+"cc": "AD"
+},
+{
+"start": "c92000",
+"end": "c927ff",
+"country": "Dominica",
+"cc": "DM"
+},
+{
+"start": "c93000",
+"end": "c937ff",
+"country": "Saint Kitts and Nevis",
+"cc": "KN"
+},
+{
+"start": "c94000",
+"end": "c947ff",
+"country": "South Sudan",
+"cc": "SS"
+},
+{
+"start": "c95000",
+"end": "c957ff",
+"country": "Timor-Leste",
+"cc": "TL"
+},
+{
+"start": "c97000",
+"end": "c977ff",
+"country": "Tuvalu",
+"cc": "TV"
+},
+{
+"start": "e00000",
+"end": "e3ffff",
+"country": "Argentina",
+"cc": "AR"
+},
+{
+"start": "e40000",
+"end": "e7ffff",
+"country": "Brazil",
+"cc": "BR"
+},
+{
+"start": "e80000",
+"end": "e80fff",
+"country": "Chile",
+"cc": "CL"
+},
+{
+"start": "e84000",
+"end": "e84fff",
+"country": "Ecuador",
+"cc": "EC"
+},
+{
+"start": "e88000",
+"end": "e88fff",
+"country": "Paraguay",
+"cc": "PY"
+},
+{
+"start": "e8c000",
+"end": "e8cfff",
+"country": "Peru",
+"cc": "PE"
+},
+{
+"start": "e90000",
+"end": "e90fff",
+"country": "Uruguay",
+"cc": "UY"
+},
+{
+"start": "e94000",
+"end": "e94fff",
+"country": "Bolivia",
+"cc": "BO"
+}
+]
+}
