@@ -13,12 +13,12 @@ h1{font-size:15px;margin:12px 14px 2px}.sub{color:var(--mut);margin:0 14px 8px;f
 .it .h{display:flex;align-items:center;gap:6px;font-weight:600}.sw{width:12px;height:12px;border-radius:3px;flex:none}
 .tag{font-size:10.5px;font-weight:600;padding:1px 5px;border-radius:4px;background:#0001;color:var(--mut)}
 .tag.mil{background:#d6272822;color:#d62728}.tag.state{background:#9467bd22;color:#9467bd}
-.ty{color:var(--fg)}.mu{color:var(--mut);font-size:12px}.rt{margin-top:3px}.rt b{font-weight:600}
+.ty{color:var(--fg)}.mu,.mut{color:var(--mut);font-size:12px}.rt{margin-top:3px}.rt b{font-weight:600}
 .lbl{background:#fff;border:1px solid #0003;border-radius:4px;padding:0 4px;font:600 11px system-ui;white-space:nowrap;color:#222;box-shadow:none}
 .lbl:before{display:none}
 @media (max-width:760px){#wrap{flex-direction:column-reverse}#side{width:auto;max-width:none;height:45%;border-right:0;border-top:1px solid var(--line)}#m{height:55%}}
 </style></head><body><div id="wrap"><div id="side"><h1>Israel · 2026-10-12 · military, state aircraft</h1>
-<p class="sub"><span id="cnt"></span> · ADS-B: adsb.lol (ODbL) · ~ = probable airport (lost low nearby) · * = from the callsign's timetable</p>
+<p class="sub"><span id="cnt"></span> · ADS-B: adsb.lol (ODbL) · photos: planespotters.net · ~ = probable airport (lost low nearby) · * = from the callsign's timetable</p>
 <div class="f"><label><input type="checkbox" id="lab" checked> labels on map</label>
 <label><input type="checkbox" class="cl" value="mil" checked> military</label>
 <label><input type="checkbox" class="cl" value="state" checked> state</label>
@@ -29,6 +29,25 @@ const m=L.map('m',{worldCopyJump:true});
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:13,attribution:'© OpenStreetMap contributors'}).addTo(m);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const end=e=>e.code?`${e.probable?'~':e.schedule?'*':''}<b>${esc(e.code)}</b> ${esc(e.name)} (${esc(e.cc)})`:`<i>${esc(e.name)}</i>`;
+
+// aircraft photos: planespotters.net public photo API (by ICAO hex, then registration). The image stays on their
+// servers; photographer credit and a link to the photo page are shown with it.
+const PH={};
+async function photo(hex,reg){
+  if(!hex||hex.startsWith('~'))return null;
+  if(hex in PH)return PH[hex];
+  let p=null;
+  try{let r=await (await fetch('https://api.planespotters.net/pub/photos/hex/'+hex)).json();p=(r.photos||[])[0]||null;
+    if(!p&&reg){r=await (await fetch('https://api.planespotters.net/pub/photos/reg/'+encodeURIComponent(reg))).json();p=(r.photos||[])[0]||null}}catch(e){}
+  return PH[hex]=p;
+}
+function photoHtml(p){
+  if(!p)return '<div class="mut" style="font-size:11px;margin-top:4px">no photo on planespotters.net</div>';
+  const t=p.thumbnail_large||p.thumbnail;
+  return `<a href="${esc(p.link)}" target="_blank" rel="noopener"><img src="${esc(t.src)}" alt="aircraft photo" loading="lazy" `+
+    `style="width:220px;height:140px;object-fit:cover;border-radius:6px;display:block;margin:6px 0 2px"></a>`+
+    `<div class="mut" style="font-size:11px">© ${esc(p.photographer)} · <a href="${esc(p.link)}" target="_blank" rel="noopener">planespotters.net</a></div>`;
+}
 const all=L.latLngBounds([]);const layers={};let sel=null;
 for(const f of D){
   const line=L.polyline(f.p,{color:f.color,weight:2.5,opacity:.85});
@@ -41,7 +60,8 @@ for(const f of D){
     `callsign ${esc(f.cs.join(' / ')||'-')} · ${esc(f.op||'operator unknown')}<br>`+
     `registered in ${esc(f.rname)} · <span class="tag ${f.cls}">${f.cls}</span><br>`+
     `${f.t0} ${end(f.from)}<br>${f.t1} → ${end(f.to)}<br>countries: ${esc(f.via.join(' › '))}`;
-  const g=L.featureGroup([line,a,b]).bindPopup(pop);
+  const g=L.featureGroup([line,a,b]).bindPopup(pop,{maxWidth:280});
+  g.on('popupopen',()=>photo(f.icao,f.reg).then(p=>g.setPopupContent(pop+photoHtml(p))));
   g.on('click',()=>pick(f.id,false));
   layers[f.id]={g,line,lab,f};all.extend(line.getBounds());
 }

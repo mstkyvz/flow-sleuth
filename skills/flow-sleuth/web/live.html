@@ -35,7 +35,7 @@
 <div class="tabs"><label><input type="checkbox" id="allr">from → to lines for all military aircraft</label></div>
 <input id="q" placeholder="search: registration, type, callsign, ship name…">
 <div id="list"></div>
-<div class="mut" style="padding:6px 14px">Aircraft: adsb.lol (ODbL), adsb.fi when it is down · ships and trains: Fintraffic Digitraffic (CC BY 4.0), Finland and the northern Baltic only · aircraft that asked not to be tracked are hidden</div>
+<div class="mut" style="padding:6px 14px">Aircraft: adsb.lol (ODbL), adsb.fi when it is down · photos: planespotters.net, © the photographers · ships and trains: Fintraffic Digitraffic (CC BY 4.0), Finland and the northern Baltic only · aircraft that asked not to be tracked are hidden</div>
 </div>
 <div id="m"></div>
 </div>
@@ -44,6 +44,25 @@ const m=L.map('m',{worldCopyJump:true}).setView([45,25],4);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:14,attribution:'© OpenStreetMap contributors'}).addTo(m);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+// aircraft photos: planespotters.net public photo API (by ICAO hex, then registration). The image stays on their
+// servers; photographer credit and a link to the photo page are shown with it.
+const PH={};
+async function photo(hex,reg){
+  if(!hex||hex.startsWith('~'))return null;
+  if(hex in PH)return PH[hex];
+  let p=null;
+  try{let r=await (await fetch('https://api.planespotters.net/pub/photos/hex/'+hex)).json();p=(r.photos||[])[0]||null;
+    if(!p&&reg){r=await (await fetch('https://api.planespotters.net/pub/photos/reg/'+encodeURIComponent(reg))).json();p=(r.photos||[])[0]||null}}catch(e){}
+  return PH[hex]=p;
+}
+function photoHtml(p){
+  if(!p)return '<div class="mut" style="font-size:11px;margin-top:4px">no photo on planespotters.net</div>';
+  const t=p.thumbnail_large||p.thumbnail;
+  return `<a href="${esc(p.link)}" target="_blank" rel="noopener"><img src="${esc(t.src)}" alt="aircraft photo" loading="lazy" `+
+    `style="width:220px;height:140px;object-fit:cover;border-radius:6px;display:block;margin:6px 0 2px"></a>`+
+    `<div class="mut" style="font-size:11px">© ${esc(p.photographer)} · <a href="${esc(p.link)}" target="_blank" rel="noopener">planespotters.net</a></div>`;
+}
 const PLANE='<svg viewBox="0 0 24 24" width="20" height="20"><path fill="COL" stroke="#fff" stroke-width=".8" d="M12 2c.8 0 1.3.7 1.3 1.6V9l7.7 4.6v2l-7.7-2.3v4.6l2.2 1.7v1.6L12 20.3l-3.5.9v-1.6l2.2-1.7v-4.6L3 15.6v-2L10.7 9V3.6C10.7 2.7 11.2 2 12 2z"/></svg>';
 const SHIP='<svg viewBox="0 0 24 24" width="14" height="14"><path fill="COL" stroke="#fff" stroke-width="1" d="M12 2l5 16-5-3-5 3z"/></svg>';
 const TRAIN='<svg viewBox="0 0 24 24" width="14" height="14"><rect x="4" y="4" width="16" height="16" rx="4" fill="COL" stroke="#fff" stroke-width="1.5"/></svg>';
@@ -64,7 +83,8 @@ function routeLines(x,g,col,full){
   if(full){apMark(r.from,col,'from').addTo(g);apMark(r.to,col,'to').addTo(g)}
   else{L.circleMarker([r.to.lat,r.to.lon],{radius:3,color:col}).addTo(g)}}
 async function select(x){
-  sel.clearLayers();selKey='ac'+x.id;const col=x.layer==='mil'?css('--mil'):css('--civ');
+  sel.clearLayers();selKey='ac'+x.id;
+  photo(x.id,x.reg).then(p=>{const mk=markers['ac'+x.id];if(mk&&mk.isPopupOpen())mk.setPopupContent(popup(mk._x)+photoHtml(p))});const col=x.layer==='mil'?css('--mil'):css('--civ');
   routeLines(x,sel,col,true);
   let tr=x.trail;
   if(mode==='server'){try{tr=await (await fetch('api/trail?hex='+x.id)).json()}catch(e){}}
@@ -108,7 +128,7 @@ async function load(){
     if(!mk){mk=L.marker([x.lat,x.lon],{icon:ic}).bindPopup('');markers[key]=mk;
       if(x.layer==='mil')mk.bindTooltip(`${esc(x.reg||'')} ${esc(x.type||'')}`,{permanent:true,direction:'right',offset:[10,0],className:'lbl'});}
     else{mk.setLatLng([x.lat,x.lon]);mk.setIcon(ic);}
-    mk.setPopupContent(popup(x));mk._x=x;
+    mk.setPopupContent(popup(x)+(x.k==='ac'&&(x.id in PH)?photoHtml(PH[x.id]):''));mk._x=x;
     if(!mk._h&&x.k==='ac'){mk.on('click',()=>select(mk._x));mk._h=1}
     if(mk._g!==x.layer){if(mk._g)layers[mk._g].removeLayer(mk);layers[x.layer].addLayer(mk);mk._g=x.layer;}
   }

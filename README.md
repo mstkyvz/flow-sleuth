@@ -89,7 +89,8 @@ Each line shows:
 - the operator;
 - from → to, and the countries crossed.
 
-Each aircraft has its own colour and a label on its route. Click a flight to highlight it and zoom to it.
+Each aircraft has its own colour and a label on its route. Click a flight to highlight it and zoom to it; its popup
+also shows a photo of that aircraft from planespotters.net, when one exists, with the photographer's credit.
 
 <p align="center"><img src="docs/img/flight_map.png" width="820" alt="Interactive map of military and state flights over Israel with the list of flights"></p>
 
@@ -172,7 +173,7 @@ uv run skills/flow-sleuth/scripts/live.py --at 32.5,34.9        # all aircraft w
 ```
 
 What the live map shows:
-- **Aircraft.** Heading, registration, type, callsign, altitude and speed. Military aircraft are red.
+- **Aircraft.** Heading, registration, type, callsign, altitude and speed. Military aircraft are red. Clicking an aircraft also shows a small photo of it when [planespotters.net](https://www.planespotters.net) has one, with the photographer's credit and a link. The photo is loaded from planespotters.net, not copied.
 - **Selected aircraft.** Click one to see where it took off and where it is going. The airports are labelled. A solid line shows the track flown since take-off. A dashed line shows the rest of the way to the destination, from the callsign's timetable.
 - **All military routes.** One switch draws from → to lines for every military aircraft at once.
 - **Ships and trains.** Shown where open live feeds exist: Finland and the northern Baltic.
@@ -290,5 +291,6 @@ uv run docs/make_replay_gif.py between IL,AZ --date 2026-10-12 docs/img/il_az.gi
 | Ports: IMF PortWatch | IMF terms of use |
 | Live ships and trains: Fintraffic Digitraffic | CC BY 4.0 |
 | Map tiles: OpenStreetMap | ODbL |
+| Aircraft photos: planespotters.net public photo API (shown from their servers with credit and link) | © the photographers |
 
 Code: MIT.
