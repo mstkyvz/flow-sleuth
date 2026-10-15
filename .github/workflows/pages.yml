@@ -1,0 +1,47 @@
+# Publishes docs/ to GitHub Pages with a fresh live-traffic snapshot (docs/live/live.json).
+# Runs on every push to main and every 15 minutes. Needs Settings → Pages → Source: "GitHub Actions".
+name: pages
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/flow-sleuth
+          key: flow-sleuth-${{ github.run_id }}
+          restore-keys: flow-sleuth-
+      - name: Tests
+        if: github.event_name != 'schedule'
+        run: uv run skills/flow-sleuth/tests/test_core.py
+      - name: Live snapshot
+        run: |
+          cp skills/flow-sleuth/web/live.html docs/live/index.html
+          uv run skills/flow-sleuth/scripts/live.py --snapshot docs/live/live.json || echo "snapshot failed, keeping the committed one"
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+      - id: deployment
+        uses: actions/deploy-pages@v4

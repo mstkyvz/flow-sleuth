@@ -166,7 +166,8 @@ def row(r) -> dict:
 
 # ------------------------------------------------------------------ itineraries
 def itineraries(rows: list[dict]) -> list[list[dict]]:
-    """Join consecutive legs of the same aircraft that end and start at the same place (a stop)."""
+    """Join consecutive legs of the same aircraft into trips: the next take-off within JOIN_H hours, from where the
+    last leg ended (within JOIN_KM) or from the airport it landed at (when both are known, e.g. from the timetable)."""
     import math
     by = collections.defaultdict(list)
     for r in rows:
@@ -178,7 +179,9 @@ def itineraries(rows: list[dict]) -> list[list[dict]]:
         for r in legs[1:]:
             a, b = cur[-1]["pts"][-1], r["pts"][0]
             km = 6371 * math.hypot(math.radians(b[1] - a[1]), math.radians(b[2] - a[2]) * math.cos(math.radians(a[1])))
-            if r["t0"] - cur[-1]["t1"] <= JOIN_H * 3600 and km <= JOIN_KM:
+            same_ap = (cur[-1].get("arr") or {}).get("code") is not None and \
+                (cur[-1].get("arr") or {}).get("code") == (r.get("dep") or {}).get("code")
+            if r["t0"] - cur[-1]["t1"] <= JOIN_H * 3600 and (km <= JOIN_KM or same_ap):
                 cur.append(r)
             else:
                 out.append(cur)
@@ -248,18 +251,6 @@ def match_trip(legs, frm, via, to, loose=False) -> bool:
     if to and e not in to:
         return False
     return all(v in seq for v in via)
-
-
-def match_seq(seq, frm, via, to) -> bool:
-    if frm and (not seq or seq[0] not in frm):
-        return False
-    if to and (not seq or seq[-1] not in to):
-        return False
-    if via:
-        inner = seq[1:-1] if (frm or to) else seq
-        if not all(v in inner or v in seq for v in via):
-            return False
-    return True
 
 
 def cmd_route(a):
@@ -351,8 +342,20 @@ def finish(a, data, legs):
         print(f"\n-> {a.json}")
     if a.map and legs:
         import mapview
-        title = "flow-sleuth: " + " ".join(x for x in sys.argv[1:] if not x.startswith("--map") and not x.endswith(".html"))
-        mapview.write(a.map, legs, title, path_ccs, Countries().name)
+        names = Countries().name
+        when = a.date + (f" – {a.end}" if a.end else "")
+        cls = {"mil": "military", "state": "state", "civil": "civil"}
+        what = ", ".join(cls.get(c, c) for c in a.cls.split(",")) + " aircraft" if a.cls else "all aircraft"
+        reg = f", registered in {names.get(a.reg_cc.upper(), a.reg_cc)}" if a.reg_cc else ""
+        if a.cmd == "country":
+            title = f"{names.get(a.cc.upper(), a.cc)} · {when} · {what}{reg}"
+        elif a.cmd == "route":
+            parts = [f"from {names.get(a.frm.upper(), a.frm)}" if a.frm else "", f"via {names.get(a.via.upper(), a.via)}" if a.via else "",
+                     f"to {names.get(a.to.upper(), a.to)}" if a.to else ""]
+            title = f"Trips {' '.join(p for p in parts if p)} · {when} · {what}{reg}"
+        else:
+            title = f"{a.id.upper()} · {when}"
+        mapview.write(a.map, legs, title, path_ccs, names)
         print(f"-> {a.map} ({len(legs)} legs)")
 
 

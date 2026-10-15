@@ -13,6 +13,8 @@ Pick one or more countries and a period, and flow-sleuth answers questions like 
 
 It runs as command-line scripts, or as a [Claude Code](https://claude.com/claude-code) skill that you ask in plain language.
 
+**[Project page with a live map and interactive examples →](https://mstkyvz.github.io/flow-sleuth/)**
+
 <p align="center"><img src="docs/img/il_mil_state.gif" width="820" alt="Replay of military and state aircraft over Israel on 12 October 2026"></p>
 
 *12 October 2026, military and state aircraft over Israel, replayed in 20-minute steps:*
@@ -257,6 +259,15 @@ uv run skills/flow-sleuth/scripts/day.py 2026-10-12
 ```
 
 To use it as a Claude Code skill, copy or link `skills/flow-sleuth` into `~/.claude/skills/`.
+
+Tests run offline, with no network:
+
+```bash
+uv run skills/flow-sleuth/tests/test_core.py
+```
+
+The project page in `docs/` is published by `.github/workflows/pages.yml`. On every push, and every 15 minutes, it
+runs the tests (on pushes), takes a new live snapshot and deploys the page.
 
 To make the GIFs:
 

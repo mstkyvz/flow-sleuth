@@ -10,8 +10,9 @@ server, opens the page in the browser.
   live.py --snapshot out/live.json     # write one snapshot (for a static site / GitHub Action) and exit
 
 Sources (no key):
-  aircraft  adsb.lol API (ODbL): /v2/mil (aircraft the database marks military) and /v2/point. Aircraft whose
-            owners asked not to be tracked (PIA / LADD) are left out.
+  aircraft  adsb.lol API (ODbL): /v2/mil (aircraft the database marks military) and /v2/point; adsb.fi open data
+            (non-commercial use) when adsb.lol is down. Aircraft whose owners asked not to be tracked (PIA / LADD)
+            are left out.
   ships     Fintraffic Digitraffic AIS (CC BY 4.0): every vessel in the Finnish and northern Baltic area.
   trains    Fintraffic Digitraffic rail (CC BY 4.0): every train in Finland with GPS position, passenger and freight.
 Most countries publish no open live feed for ships or trains; other ship-position sources need an account
@@ -104,25 +105,31 @@ def ship_kind(t) -> str:
 
 def aircraft(at: str | None, nm: int) -> list[dict]:
     out = {}
-    srcs = ["https://api.adsb.lol/v2/mil"]
+    # adsb.lol first; adsb.fi (same readsb JSON) when it is down. One source per query, never both.
+    la, lo = at.split(",") if at else (None, None)
+    queries = [("https://api.adsb.lol/v2/mil", "https://opendata.adsb.fi/api/v2/mil")]
     if at:
-        la, lo = at.split(",")
-        srcs.append(f"https://api.adsb.lol/v2/point/{la}/{lo}/{min(nm, 250)}")
-    for u in srcs:
-        try:
-            for a in fetch(u, 8).get("ac", []):
+        queries.append((f"https://api.adsb.lol/v2/point/{la}/{lo}/{min(nm, 250)}",
+                        f"https://opendata.adsb.fi/api/v2/lat/{la}/lon/{lo}/dist/{min(nm, 250)}"))
+    for alts in queries:
+        for u in alts:
+            try:
+                d = fetch(u, 8)
+            except Exception as e:  # noqa: BLE001
+                print("aircraft:", u, e)
+                continue
+            for a in d.get("ac", d.get("aircraft", [])):
                 if a.get("lat") is None or (a.get("dbFlags") or 0) & 12:
                     continue
                 cls = "mil" if (a.get("dbFlags") or 0) & 1 else "civil"
                 out[a["hex"]] = {"id": a["hex"], "lat": a["lat"], "lon": a["lon"], "trk": a.get("track") or a.get("true_heading") or 0,
                                  "alt": a.get("alt_baro"), "gs": a.get("gs"), "cs": (a.get("flight") or "").strip(),
                                  "reg": a.get("r"), "type": a.get("t"), "desc": a.get("desc"), "op": a.get("ownOp"), "cls": cls,
-                                 "sq": a.get("squawk")}
+                                 "sq": a.get("squawk"), "src": "adsb.lol" if "adsb.lol" in u else "adsb.fi"}
                 tr = TRAILS.setdefault(a["hex"], [])
                 if not tr or (tr[-1][1], tr[-1][2]) != (a["lat"], a["lon"]):
                     tr.append([int(time.time()), round(a["lat"], 4), round(a["lon"], 4)])
-        except Exception as e:  # noqa: BLE001
-            print("aircraft:", u, e)
+            break
     now = time.time()
     for h in list(TRAILS):
         TRAILS[h] = [p for p in TRAILS[h] if now - p[0] < TRAIL_S]

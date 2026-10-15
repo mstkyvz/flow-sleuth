@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>flow-sleuth</title>
+<meta name="description" content="What moves between countries: military, state and civil aircraft, ships, trains and trade, from open data with no API keys.">
+<style>
+:root{--bg:#fafaf8;--fg:#1d1d1f;--mut:#5b5b62;--card:#fff;--line:#e4e4e0;--acc:#1f4fe0;--mil:#d62728}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141416;--fg:#ececf0;--mut:#a5a5ad;--card:#1d1d21;--line:#2e2e34;--acc:#7a9bff;--mil:#ff6b62}}
+:root[data-theme="dark"]{--bg:#141416;--fg:#ececf0;--mut:#a5a5ad;--card:#1d1d21;--line:#2e2e34;--acc:#7a9bff;--mil:#ff6b62}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+header{padding:48px 0 20px}
+h1{font-size:clamp(30px,5vw,46px);margin:0 0 8px;letter-spacing:-.02em}
+.lead{font-size:clamp(17px,2.4vw,20px);color:var(--mut);max-width:800px;margin:0}
+.cta{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 0}
+.btn{display:inline-block;padding:10px 16px;border-radius:9px;text-decoration:none;font-weight:600;border:1px solid var(--line);color:var(--fg);background:var(--card)}
+.btn.primary{background:var(--acc);border-color:var(--acc);color:#fff}
+.note{font-size:14px;color:var(--mut);margin-top:14px}
+h2{font-size:25px;margin:44px 0 6px}
+.sub{color:var(--mut);margin:0 0 16px;max-width:820px}
+.hero{margin:26px 0 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+.hero img{width:100%;display:block}
+.hero p{margin:0;padding:10px 14px 12px;color:var(--mut);font-size:14.5px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.card img{width:100%;height:230px;object-fit:cover;object-position:top left;display:block;background:#eee}
+.card .t{padding:12px 14px 14px}
+.card h3{margin:0 0 4px;font-size:17px}
+.card p{margin:0;color:var(--mut);font-size:14.5px}
+a{color:var(--acc)}
+.q{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));padding:0;list-style:none;margin:0}
+.q li{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:8px;padding:10px 12px;font-style:italic}
+.feat{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));padding:0;list-style:none;margin:0}
+.feat li{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:15px}
+.feat b{display:block;margin-bottom:2px}
+.lim li{border-left:3px solid var(--mil)}
+pre{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;overflow:auto;font-size:13.5px}
+footer{color:var(--mut);font-size:13.5px;padding:40px 0 48px;border-top:1px solid var(--line);margin-top:48px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>flow-sleuth</h1>
+  <p class="lead">What moves between countries: military, state and civil aircraft, ships, trains and trade. Pick one or more countries and a day to see who flew in, out or over, from where to where, how much the countries trade, and whether their own figures agree. Open data only, no API keys.</p>
+  <div class="cta">
+    <a class="btn primary" href="live/">Open the live map</a>
+    <a class="btn" href="demo/israel-military.html">Example: one day, one country</a>
+    <a class="btn" href="demo/il-az-sy/">Example: relations report</a>
+    <a class="btn" href="https://github.com/mstkyvz/flow-sleuth">Code on GitHub</a>
+  </div>
+  <p class="note">Open-source intelligence from public broadcasts and official statistics. It shows aircraft, never passengers. Aircraft whose owners asked not to be tracked are never shown.</p>
+</header>
+
+<div class="hero"><img src="img/il_mil_state.gif" alt="Replay of military and state aircraft over Israel on 12 October 2026">
+<p>12 October 2026, military and state aircraft over Israel: US Air Force KC-135 tankers flying circuits out of Ben Gurion, C-17 transports from US bases in Germany, RAF aircraft, Israeli Air Force Gulfstream and C-130J.</p></div>
+
+<h2>Ask it</h2>
+<p class="sub">As a Claude Code skill, put the question in your own words. It runs the right commands and answers with a table, a map and the limits that apply.</p>
+<ul class="q">
+  <li>Which military aircraft landed in Israel yesterday, and where did they come from?</li>
+  <li>Did any aircraft fly from Israel to Azerbaijan last week, and over which countries?</li>
+  <li>Compare trade between Azerbaijan and Israel as each side reports it.</li>
+  <li>Is anything flying over Syria right now?</li>
+</ul>
+
+<h2>What you get</h2>
+<div class="grid">
+  <div class="card"><a href="demo/israel-military.html"><img src="img/flight_map.png" alt="Interactive map of military and state flights with the list of flights" loading="lazy"></a>
+    <div class="t"><h3>One country, one day</h3><p>Every military, state or civil flight in or over the country. Each one comes with its registration, aircraft type and full name, callsign, operator and state of registry, from → to airports, and the countries crossed in order. Click a flight to highlight its route. <a href="demo/israel-military.html">Open the example</a>.</p></div></div>
+  <div class="card"><img src="img/il_az.gif" alt="Replay of flights between Israel and Azerbaijan" loading="lazy">
+    <div class="t"><h3>Routes between countries</h3><p>From A to C, via B, with stops. Legs are joined into trips where the aircraft took off again from where it landed. Here: every direct flight between Israel and Azerbaijan on one day.</p></div></div>
+  <div class="card"><a href="demo/il-az-sy/"><img src="img/relations_report.png" alt="Relations report: signals, trade per year and month, top products" loading="lazy"></a>
+    <div class="t"><h3>Relations report</h3><p>Trade as each side reports it, with the gaps and mismatches between the two (embargoes, re-routing, confidential trade). Also the top products, ports and ship traffic, and flights between the countries. <a href="demo/il-az-sy/">Israel · Azerbaijan · Syria</a>.</p></div></div>
+  <div class="card"><a href="live/"><img src="img/live_map.png" alt="Live map with a selected flight and its route" loading="lazy"></a>
+    <div class="t"><h3>Live map</h3><p>Military aircraft worldwide, updated every 15 minutes on this site and live when run locally. Click an aircraft for where it took off and where it is going. Ships and trains appear where open live feeds exist. <a href="live/">Open it</a>.</p></div></div>
+</div>
+
+<h2>What it takes into account</h2>
+<ul class="feat">
+  <li><b>Aircraft</b>Every aircraft the volunteer receivers of adsb.lol heard that day, with type, registration, operator and a military flag from the readsb database.</li>
+  <li><b>Who owns it</b>The state of registry, taken from the aircraft's 24-bit ICAO address block.</li>
+  <li><b>Airports</b>Take-off and landing when heard. When not heard: the airport where the track was lost low (probable), or the callsign's timetable route.</li>
+  <li><b>Borders</b>The countries each track crossed, in order, with entry and exit times.</li>
+  <li><b>Trade</b>UN Comtrade figures as both partners report them: yearly, monthly and by product chapter.</li>
+  <li><b>Ships</b>IMF PortWatch port calls and seaborne tonnage from AIS, plus IMF's modelled trade between each port and a partner country.</li>
+  <li><b>Live</b>adsb.lol / adsb.fi aircraft, and Fintraffic Digitraffic ships and trains.</li>
+  <li><b>Coverage</b>For each country, how much traffic the receivers actually see. Before reading an absence as "nothing flew", check this.</li>
+</ul>
+
+<h2>What it cannot tell you</h2>
+<ul class="feat lim">
+  <li><b>Who was on board</b>Aircraft, never passengers. A flight from A to B says nothing about who flew.</li>
+  <li><b>Dark flights</b>Many military aircraft switch ADS-B off. Not seeing a flight does not mean it did not happen.</li>
+  <li><b>Thinly covered places</b>Near the ground, Syria, Iraq, Azerbaijan and much of China are poorly covered. The tool measures and shows this.</li>
+  <li><b>Verdicts</b>The relations report lists measurable signals. It does not say whether relations are good or bad.</li>
+</ul>
+
+<h2>Try it</h2>
+<pre>git clone https://github.com/mstkyvz/flow-sleuth && cd flow-sleuth
+uv run skills/flow-sleuth/scripts/day.py 2026-10-12
+uv run skills/flow-sleuth/scripts/query.py country IL --date 2026-10-12 --class mil,state --map out/il.html
+uv run skills/flow-sleuth/scripts/relations.py IL AZ SY --flights 2026-10-12:2026-10-12 --out out/il-az-sy
+uv run skills/flow-sleuth/scripts/live.py --at 32.5,34.9</pre>
+
+<footer>MIT licence. Data: adsb.lol (ODbL), adsb.fi open data, OurAirports (public domain), VRS standing data (CC0), Natural Earth (public domain), UN Comtrade, IMF PortWatch, Fintraffic Digitraffic (CC BY 4.0), map © OpenStreetMap contributors. Estimates from open broadcasts and official statistics; no warranty.</footer>
+</div>
+</body>
+</html>
